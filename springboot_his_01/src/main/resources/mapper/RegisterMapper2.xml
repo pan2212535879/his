@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.His02.mapper.OutpatientDoctorTemplate.Register2Mapper">
+    <!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+    <select id="selectAll" resultType="Register">
+        select * from Register
+        <!-- where标签表示生成where关键字，配合下面的if标签可以动态生成sql语句 -->
+        <where>
+            <!-- 如果参数对象的uname属性非空且不是空字符串，则if中的sql语句生效；#{uname}表示取得参数对象的uname属性值 -->
+            <if test="ID!=null and ID!=''">
+                and ID like concat('%', #{ID}, '%')
+            </if>
+            <if test="RegisterID!=null and RegisterID!=''">
+                and RegisterID like concat('%', #{RegisterID}, '%')
+            </if>
+            <if test="StartTime!=null and StartTime!=''">
+                and RegistTime &gt; #{StartTime}
+            </if>
+            <if test="EndTime!=null and EndTime!=''">
+                and RegistTime &lt; #{EndTime}
+            </if>
+        </where>
+        order by ID
+    </select>
+</mapper>

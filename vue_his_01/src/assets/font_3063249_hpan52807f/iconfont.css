@@ -1,0 +1,45 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3063249 */
+  src: url('iconfont.woff2?t=1640486653697') format('woff2'),
+       url('iconfont.woff?t=1640486653697') format('woff'),
+       url('iconfont.ttf?t=1640486653697') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-ico_yiyuanguanjia_yinshianpai:before {
+  content: "\e946";
+  color: #1e5b9a;
+}
+
+.icon-yiyuan:before {
+  content: "\e65a";
+  color: #1e5b9a;
+}
+
+.icon-yiyuanzixun:before {
+  content: "\e6cd";
+  color: #1e5b9a;
+}
+
+.icon-yiyuanjieshaobeifen:before {
+  content: "\e62a";
+  color: #1e5b9a;
+}
+
+.icon-yiyuan1:before {
+  content: "\e663";
+  color: #1e5b9a;
+}
+
+.icon-yiyuan2:before {
+  content: "\e611";
+  color: #1e5b9a;
+}
+

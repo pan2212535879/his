@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace的值，要填写对应模块的mapper接口类的全类名 -->
+<mapper namespace="com.abc.His02.mapper.UserMapper">
+	<!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+	<select id="selectAll" resultType="User">
+		select * from User
+			<!-- where标签表示生成where关键字，配合下面的if标签可以动态生成sql语句 -->
+			<where>
+				<!-- 如果参数对象的uname属性非空且不是空字符串，则if中的sql语句生效；#{uname}表示取得参数对象的uname属性值 -->
+				<if test="UserName!=null and UserName!=''">
+					and UserName like concat('%', #{UserName}, '%')
+				</if>
+				<if test="RealName!=null and RealName!=''">
+					and RealName like concat('%', #{RealName}, '%')
+				</if>
+			</where>
+			order by ID
+	</select>
+
+	<select id="selectById" resultType="User">
+		select * from User where ID=#{ID}
+	</select>
+
+	<!-- insert标签匹配插入语句，不需要有参数或者返回值设置，框架自动匹配 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="ID">
+		insert into User(UserName, Password, RealName, UserType, DocTitleID, IsScheduling, DeptID, RegistLeID, DelMark) values(#{UserName}, #{Password}, #{RealName}, #{UserType}, #{DocTitleID}, #{IsScheduling}, #{DeptID}, #{RegistLeID}, #{DelMark})
+	</insert>
+
+	<update id="update">
+		update User set #{UserName}, #{Password}, #{RealName}, #{UserType}, #{DocTitleID}, #{IsScheduling}, #{DeptID}, #{RegistLeID}, #{DelMark} where ID=#{ID}
+	</update>
+
+	<delete id="delete">
+		delete from User where ID=#{ID}
+	</delete>
+
+	<select id="login" resultType="User">
+		select * from user where UserName=#{UserName} and Password=#{Password}
+	</select>
+
+	<select id="selectDeptByID" resultType="Department">
+        select *
+        from department
+        where ID = #{DeptID}
+    </select>
+</mapper>

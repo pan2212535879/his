@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.His02.mapper.OutpatientFinancial.WorkloadStatisticsMapper">
+
+
+    <!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+    <select id="selectAll" resultType="WorkloadStatistics">
+        SELECT p.ID,
+        p.`Name`,
+        p.Price,
+        p.Amount,
+        p.DeptID,
+        p.CreateOperID,
+        e.ID ExpID,
+        e.ExpName,
+        dr.ID DrugsID,
+        c.ConstantName,
+        d.DeptName,
+        d.DeptType,
+        p.Createtime
+        FROM patientcosts p
+        LEFT JOIN fmeditem f
+        ON p.`Name` = f.ItemName
+        LEFT JOIN expenseclass e
+        ON f.ExpClassID = e.ID
+        LEFT JOIN department d
+        ON p.DeptID = d.ID
+        LEFT JOIN drugs dr
+        ON p.`Name` = dr.DrugsName
+        LEFT JOIN constantitem c
+        ON dr.DrugsTypeID = c.ID
+        <where>
+            <if test="StartTime!=null and StartTime!=''">
+                and p.Createtime &gt; #{StartTime}
+            </if>
+            <if test="EndTime!=null and EndTime!=''">
+                and p.Createtime &lt; #{EndTime}
+            </if>
+        </where>
+        ORDER BY p.ID
+    </select>
+
+    <select id="selectDeptList" resultType="DeptWorkload">
+        select * from department
+        <where>
+            <if test="DeptType!=null and DeptType != ''">
+                department.DeptType = #{DeptType}
+            </if>
+        </where>
+        order by ID
+    </select>
+</mapper>

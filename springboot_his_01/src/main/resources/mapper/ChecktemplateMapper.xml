@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace的值，要填写对应模块的mapper接口类的全类名 -->
+<mapper namespace="com.abc.His02.mapper.OutpatientDoctorTemplate.CheckTemplateMapper">
+    <!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+    <select id="selectAll" resultType="CheckTemplate">
+        select * from checktemplate
+        <!-- where标签表示生成where关键字，配合下面的if标签可以动态生成sql语句 -->
+        <where>
+            <!-- 如果参数对象的uname属性非空且不是空字符串，则if中的sql语句生效；#{uname}表示取得参数对象的uname属性值 -->
+            <if test="Name!=null and Name!=''">
+                and Name like concat('%', #{Name}, '%')
+            </if>
+            <if test="UserID!=null and UserID!=''">
+                and UserID like concat('%', #{UserID}, '%')
+            </if>
+            <if test="RecordType!=null and RecordType!=''">
+                and RecordType like concat('%', #{RecordType}, '%')
+            </if>
+        </where>
+        /*通过按照主键字段进行排序*/
+        order by ID
+    </select>
+
+    <select id="selectById" resultType="CheckTemplate">
+        select *
+        from checktemplate
+        where ID = #{ID}
+    </select>
+
+    <!-- insert标签匹配插入语句，不需要有参数或者返回值设置，框架自动匹配 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="ID">
+        insert into checktemplate(Name, UserID, CreationTime, Scope, RecordType, DelMark)
+        values (#{Name}, #{UserID}, #{CreationTime}, #{Scope}, #{RecordType}, #{DelMark})
+    </insert>
+
+    <!--  delete  -->
+    <delete id="delete">
+        delete
+        from checktemplate
+        where ID = #{ID}
+    </delete>
+
+    <!--  update  -->
+    <update id="update">
+        update checktemplate
+        set Name=#{Name},
+            UserID=#{UserID},
+            Scope=#{Scope},
+            RecordType=#{RecordType},
+            DelMark=#{DelMark}
+        where ID = #{ID}
+    </update>
+</mapper>

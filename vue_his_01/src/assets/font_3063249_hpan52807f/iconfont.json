@@ -1,0 +1,51 @@
+{
+  "id": "3063249",
+  "name": "HIS",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "诊所管理系统",
+  "glyphs": [
+    {
+      "icon_id": "6607843",
+      "name": "ico_医院管家_饮食安排",
+      "font_class": "ico_yiyuanguanjia_yinshianpai",
+      "unicode": "e946",
+      "unicode_decimal": 59718
+    },
+    {
+      "icon_id": "1313803",
+      "name": "医院",
+      "font_class": "yiyuan",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "5105404",
+      "name": "医院资讯",
+      "font_class": "yiyuanzixun",
+      "unicode": "e6cd",
+      "unicode_decimal": 59085
+    },
+    {
+      "icon_id": "20592538",
+      "name": "医院介绍备份",
+      "font_class": "yiyuanjieshaobeifen",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "21398115",
+      "name": "医院",
+      "font_class": "yiyuan1",
+      "unicode": "e663",
+      "unicode_decimal": 58979
+    },
+    {
+      "icon_id": "25585515",
+      "name": "医院",
+      "font_class": "yiyuan2",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    }
+  ]
+}

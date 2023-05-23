@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace的值，要填写对应模块的mapper接口类的全类名 -->
+<mapper namespace="com.abc.His02.mapper.outpatientPharmacyWorkstationMapper.OutpatientWithdrawalMapper">
+    <insert id="add"></insert>
+    <delete id="delete"></delete>
+    <!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+    <select id="selectAll" resultType="Prescription">
+        select distinct p.ID,p.UserId, d.DrugsName,d.DrugsFormat,pd.Amount,d.DrugsUnit,d.DrugsPrice,
+        (d.DrugsPrice*pd.Amount) as SUM,d.ManuFacturer,pd.DrugsUsage,pd.Dosage,pd.State,r.RealName,
+        r.Gender,r.Age,p.prescriptionState,r.caseNumber
+        from Drugs d ,Prescription p,Prescriptiondetailed pd, MedicalRecord m , Register r
+        where pd.PrescriptionID = p.id and pd.drugsid = d.id and m.ID = p.MedicalID and m.RegistID = r.ID
+        <if test="CaseNumber!=null and CaseNumber!=''">
+            and m.CaseNumber = #{CaseNumber}
+        </if>
+        <if test="State!=null and State!=''">
+            and pd.State = #{State}
+        </if>
+        and pd.State!=2
+    </select>
+
+    <select id="count" resultType="Prescription">
+        select SUM(d.DrugsPrice*pd.Amount)  sum
+        from Drugs d ,Prescription p,Prescriptiondetailed pd , MedicalRecord m , Register r
+        where pd.PrescriptionID = p.id and pd.drugsid = d.id and m.ID = p.MedicalID and m.RegistID = r.ID
+        <if test="CaseNumber!=null and CaseNumber!=''">
+            and m.CaseNumber = #{CaseNumber}
+        </if>
+    </select>
+
+
+    <update id="update">
+        update PrescriptionDetailed pd
+            left join Prescription
+        on pd.PrescriptionID = Prescription.ID
+            set pd.Amount = pd.Amount-#{amount},pd.state=5
+        where Prescription.ID = #{id}
+    </update>
+
+    <update id="updateAll">
+        update PrescriptionDetailed pd,Prescription p, MedicalRecord m , Register r
+        set pd.State = 6,pd.Amount=0
+        where pd.PrescriptionID = p.id and m.ID = p.MedicalID and m.RegistID = r.ID
+        <if test="CaseNumber!=null and CaseNumber!=''">
+            and m.CaseNumber = #{CaseNumber}
+        </if>
+    </update>
+
+
+</mapper>

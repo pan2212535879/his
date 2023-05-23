@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace的值，要填写对应模块的mapper接口类的全类名 -->
+<mapper namespace="com.abc.His02.mapper.outpatientDoctorWorkStationMapper.AfterDiagnosisMapper">
+    <!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+    <select id="selectAll" resultType="User">
+        select * from User
+        <!-- where标签表示生成where关键字，配合下面的if标签可以动态生成sql语句 -->
+        <where>
+            <!-- 如果参数对象的uname属性非空且不是空字符串，则if中的sql语句生效；#{uname}表示取得参数对象的uname属性值 -->
+            <if test="UserName!=null and UserName!=''">
+                and UserName like concat('%', #{UserName}, '%')
+            </if>
+            <if test="RealName!=null and RealName!=''">
+                and RealName like concat('%', #{RealName}, '%')
+            </if>
+        </where>
+        order by ID
+    </select>
+
+    <select id="selectById" resultType="User">
+        select *
+        from User
+        where ID = #{ID}
+    </select>
+
+    <!-- insert标签匹配插入语句，不需要有参数或者返回值设置，框架自动匹配 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="ID">
+        insert into User(UserName, Password, RealName, UserType, DocTitleID, IsScheduling, DeptID, RegistLeID, DelMark)
+        values (#{UserName}, #{Password}, #{RealName}, #{UserType}, #{DocTitleID}, #{IsScheduling}, #{DeptID},
+                #{RegistLeID}, #{DelMark})
+    </insert>
+
+    <update id="update">
+        update User
+        set #{UserName},
+            #{Password},
+            #{RealName},
+            #{UserType},
+            #{DocTitleID},
+            #{IsScheduling},
+            #{DeptID},
+            #{RegistLeID},
+            #{DelMark}
+        where ID = #{ID}
+    </update>
+
+    <delete id="delete">
+        delete
+        from User
+        where ID = #{ID}
+    </delete>
+
+
+    <select id="initPatients" resultType="Register">
+        select *
+        from Register
+        where VisitState = 2
+          and DeptID = #{DeptID}
+          and UserID = #{ID}
+          and CaseNumber in (select CaseNumber from MedicalRecord)
+    </select>
+
+    <select id="searchByName" resultType="Register">
+        select *
+        from Register
+        where VisitState = 2
+          and DeptID = #{DeptID}
+          and UserID = #{UserID}
+          and RealName = #{RealName}
+          and CaseNumber in (select CaseNumber from MedicalRecord)
+    </select>
+
+    <select id="searchByNumber" resultType="Register">
+        select *
+        from Register
+        where VisitState = 2
+          and DeptID = #{DeptID}
+          and UserID = #{UserID}
+          and CaseNumber = #{CaseNumber}
+          and CaseNumber in (select CaseNumber from MedicalRecord)
+    </select>
+
+
+    <select id="getRecord" resultType="MedicalRecord">
+        select *
+        from MedicalRecord
+        where CaseNumber = #{CaseNumber}
+          and CaseState = 2
+    </select>
+
+    <update id="commitEndPatient">
+        update Register
+        set VisitState=3
+        where CaseNumber = #{CaseNumber}
+    </update>
+
+    <update id="commitEndMedicalRecord">
+        update MedicalRecord
+        set CaseState=3
+        where CaseNumber = #{CaseNumber}
+          and RegistID = #{RegistID}
+    </update>
+
+
+    <select id="recordIsExist" resultType="MedicalRecord">
+        select *
+        from MedicalRecord
+        where CaseNumber = #{CaseNumber}
+    </select>
+
+    <!-- insert标签匹配插入语句，不需要有参数或者返回值设置，框架自动匹配 -->
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="ID">
+        insert into MedicalRecord(CaseNumber, RegistID, Readme, Present, PresentTreat, History, Allergy, Physique,
+                                  Proposal, Careful, CheckResult, Diagnosis, Handling, CaseState)
+        values (#{CaseNumber}, #{RegistID}, #{Readme}, #{Present}, #{PresentTreat}, #{History}, #{Allergy}, #{Physique},
+                #{Proposal}, #{Careful}, #{CheckResult}, #{Diagnosis}, #{Handling}, #{CaseState})
+    </insert>
+
+    <update id="updateRecord">
+        update MedicalRecord
+        set Readme=#{Readme},
+            Present=#{Present},
+            PresentTreat=#{PresentTreat},
+            History=#{History},
+            Allergy=#{Allergy},
+            Physique=#{Physique},
+            Proposal=#{Proposal},
+            Careful=#{Careful},
+            CheckResult=#{CheckResult},
+            Diagnosis=#{Diagnosis},
+            Handling=#{Handling},
+            CaseState=#{CaseState}
+        where CaseNumber = #{CaseNumber}
+          and RegistID = #{RegistID}
+    </update>
+
+    <update id="updateRegister">
+        update Register
+        set VisitState=2
+        where CaseNumber = #{CaseNumber}
+    </update>
+
+
+    <select id="getRecordTemplatePersonally" resultType="RecordTemplate">
+        select *
+        from RecordTemplate
+        where UserID = #{ID}
+          and Scope = "个人"
+          and DelMark = 1
+    </select>
+
+    <select id="getRecordTemplateByDepartment" resultType="RecordTemplate">
+        select *
+        from RecordTemplate
+        where Scope = "科室"
+          and DeptID = #{DeptID}
+          and DelMark = 1
+    </select>
+
+    <select id="getRecordTemplateByHospital" resultType="RecordTemplate">
+        select *
+        from RecordTemplate
+        where DelMark = 1
+          and Scope = "全院"
+    </select>
+
+    <update id="deleteRecordTemplate">
+        update RecordTemplate
+        set DelMark=0
+        where UserID = #{UserID}
+          and ID = #{ID}
+    </update>
+
+    <!-- insert标签匹配插入语句，不需要有参数或者返回值设置，框架自动匹配 -->
+    <insert id="commitTemplate" useGeneratedKeys="true" keyProperty="ID">
+        insert into RecordTemplate(Name, DeptID, UserID, CreationTime, Scope, Readme, Present, PresentTreat, History,
+                                   Allergy, Physique, Proposal, Careful, CheckResult, Diagnosis, Handling, DelMark)
+        values (#{Name}, #{DeptID}, #{UserID}, #{CreationTime}, #{Scope}, #{Readme}, #{Present}, #{PresentTreat},
+                #{History}, #{Allergy}, #{Physique}, #{Proposal}, #{Careful}, #{CheckResult}, #{Diagnosis}, #{Handling},
+                1)
+    </insert>
+
+    <select id="searchIDNumber" resultType="String">
+        select IDnumber
+        from Register
+        where CaseNumber = #{CaseNumber}
+    </select>
+
+    <select id="searchRegister" resultType="Register">
+        select *
+        from Register
+        where IDnumber != ''
+          and IDnumber = #{IDnumber}
+    </select>
+
+    <select id="searchHostory" resultType="MedicalRecord">
+        select *
+        from MedicalRecord
+        where CaseNumber = #{CaseNumber}
+    </select>
+
+    <select id="searchDeptName" resultType="String">
+        select DeptName
+        from Department
+        where ID = (select DeptID from Register where CaseNumber = #{CaseNumber})
+    </select>
+
+    <select id="historyRegisterDetail" resultType="MedicalRecord">
+        select *
+        from MedicalRecord
+        where CaseNumber = #{CaseNumber}
+    </select>
+</mapper>

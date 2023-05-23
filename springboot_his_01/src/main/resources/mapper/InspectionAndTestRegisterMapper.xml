@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abc.His02.mapper.OutpatientMedicalTechnologyWorkstation.InspectionAndTestRegisterMapper">
+    <!-- select标签表示对应查询语句；id值唯一并且要与接口类中的对应方法名一致；resultType值要与接口类中对应方法的返回值类型匹配 -->
+    <select id="selectAll" resultType="CheckApply">
+        SELECT * FROM checkapply c
+        LEFT JOIN register
+        ON c.RegistID = register.ID
+        LEFT JOIN fmeditem
+        ON c.ItemID = fmeditem.ID
+        <where>
+            <if test="RealName!=null and RealName!=''">
+                RealName like concat('%', #{RealName}, '%')
+            </if>
+        </where>
+    </select>
+    <update id="updateState">
+        update checkapply
+        set State=#{State}
+        where ID = #{ID}
+    </update>
+</mapper>
